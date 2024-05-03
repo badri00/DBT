@@ -1,0 +1,304 @@
+
+mysql> use College;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_College |
++-------------------+
+| Q1                |
+| Q2                |
+| Q3                |
+| Q4                |
+| Uni               |
+| stud1             |
+| stud2             |
+| stud3             |
+| stud4             |
+| student           |
++-------------------+
+10 rows in set (0.00 sec)
+
+
+
+mysql> delimiter &&
+mysql> create procedure factorial(in num int)
+    -> begin
+    -> declare fact int default 1;
+    -> repeat
+    -> set fact=fact*num;
+    -> set num=num-1;
+    -> until num<1
+    -> end repeat;
+    -> select fact;
+    -> end &&
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call factorial (5);
++------+
+| fact |
++------+
+|  120 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call factorial (5);
++------+
+| fact |
++------+
+|  120 |
++------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter &&
+mysql> create procedure factorial2(in num int)
+    -> begin
+    -> declare fact int default 1;
+    -> repeat
+    -> set fact=fact*num;
+    -> set num=num-1;
+    -> until num=0
+    -> end repeat;
+    -> select fact;
+    -> end &&
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call factorial2(3);
++------+
+| fact |
++------+
+|    6 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter &&
+mysql> create procedure Findsum1(in num int)
+    -> begin
+    -> declare sum int default 0;
+    -> declare rem int default 0;
+    -> while num!=0
+    -> do
+    -> set rem=num%10;
+    -> SELECT rem;
+    -> set num=floor(num/10);
+    -> set sum=sum+rem;
+    -> end while;
+    -> select sum ;
+    -> end &&
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call Findsum1(12345) &&
++------+
+| rem  |
++------+
+|    5 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| rem  |
++------+
+|    4 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| rem  |
++------+
+|    3 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| rem  |
++------+
+|    2 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| rem  |
++------+
+|    1 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| sum  |
++------+
+|   15 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter &&
+mysql> create procedure fibbonacci(in num int)
+    -> begin
+    -> declare num1 int default 0;
+    -> declare num2 int default 1;
+    -> declare ans int default 0;
+    -> select num1;
+    -> select num2;
+    -> set num=num-2;
+    -> while num>0
+    -> do
+    -> set ans=num1+num2;
+    -> select ans;
+    -> set num1=num2;
+    -> set num2=ans;
+    -> set num=num-1;
+    -> end while;
+    -> end &&
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call fibbonacci(7);
++------+
+| num1 |
++------+
+|    0 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| num2 |
++------+
+|    1 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| ans  |
++------+
+|    1 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| ans  |
++------+
+|    2 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| ans  |
++------+
+|    3 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| ans  |
++------+
+|    5 |
++------+
+1 row in set (0.00 sec)
+
++------+
+| ans  |
++------+
+|    8 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> delimiter &&
+mysql> create procedure evenodd7(in num int,out type varchar(10))
+    -> begin 
+    -> declare i int default 1;
+    -> while i<num do
+    -> if i%2=0 then  
+    -> set type="even";
+    -> else 
+    -> set type ="odd";
+    -> end if;
+    -> select i,type;
+    -> set i=i+1;
+    -> end while;
+    -> end &&
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter ;
+mysql> call evenodd7(10,@type);
++------+------+
+| i    | type |
++------+------+
+|    1 | odd  |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    2 | even |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    3 | odd  |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    4 | even |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    5 | odd  |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    6 | even |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    7 | odd  |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    8 | even |
++------+------+
+1 row in set (0.00 sec)
+
++------+------+
+| i    | type |
++------+------+
+|    9 | odd  |
++------+------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> 
+
+

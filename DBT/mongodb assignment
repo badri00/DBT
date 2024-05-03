@@ -1,0 +1,293 @@
+
+//Q1  BOOKS
+
+test> use library
+switched to db library
+
+library> var data=[ {refno:1001,name:"Python program",author:"Shyam",coauthor:"Rakesh",pages:350,price:450},{refno:1002,name:"Java program",author:"Amita",pages:300,price:500},{ refno: 1003, name: "HTML", author: "Amita", coauthor: "Shyam", pages: 225, price: 300 }, { refno: 1004, name: "MongoDB", author: "Shyam", pages: 440, price: 500 }, { refno: 1005, name: "MySQL", author: "Shrikant", author: "Nitin", pages: 330, price: 630 }]
+
+
+//1. Count how many books wrote by Amita.
+
+library> db.library.find({$or:[{author:"Amita"},{coauthor:"Amita"}]}).count()
+2
+
+//2. Count total books written by Shyam.
+
+library> db.library.find({$or:[{author:"Shyam"},{coauthor:"Shyam"}]}).count()
+3
+
+//3. How many author's books are available in library?
+
+library> db.library.find({$or:[{author:{$exists:true}},{coauthor:{$exists:true}}]}).count()
+5
+
+//4. Find average cost of books in library.
+
+library> db.library.aggregate([{$group:{_id:null,avgPrice:{$avg:"$price"}}}])
+[ { _id: null, avgPrice: 476 } ]
+
+//5. Find total number of pages of books authored by Shyam.
+
+library> db.library.aggregate([{$match:{author:"Shyam"}},{$group:{_id:null,sumPages:{$sum:"$pages"}}}])
+[ { _id: null, sumPages: 790 } ]
+
+//6. Sort the books by descending order of pages.
+
+library> db.library.find().sort({pages:-1})
+[
+  {
+    _id: ObjectId('663289ad66801f94582202db'),
+    refno: 1004,
+    name: 'MongoDB',
+    author: 'Shyam',
+    pages: 440,
+    price: 500
+  },
+  {
+    _id: ObjectId('6632870d66801f94582202d8'),
+    refno: 1001,
+    name: 'Python program',
+    author: 'Shyam',
+    coauthor: 'Rakesh',
+    pages: 350,
+    price: 450
+  },
+  {
+    _id: ObjectId('663289ad66801f94582202dc'),
+    refno: 1005,
+    name: 'MySQL',
+    author: 'Shrikant',
+    pages: 330,
+    price: 630,
+    coauthor: 'Nitin'
+  },
+  {
+    _id: ObjectId('663288dd66801f94582202d9'),
+    refno: 1002,
+    name: 'Java program',
+    author: 'Amita',
+    pages: 300,
+    price: 500
+  },
+  {
+    _id: ObjectId('663289ad66801f94582202da'),
+    refno: 1003,
+    name: 'HTML',
+    author: 'Amita',
+    coauthor: 'Shyam',
+    pages: 225,
+    price: 300
+  }
+]
+
+//7. Change the id of book 'MongoDB' to 1014.
+
+library> db.library.update({name:"MongoDB"},{$set:{refno:1014}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+//8. Find total books whose cost is above 400.
+
+library> db.library.find({price:{$gt:400}})
+[
+  {
+    _id: ObjectId('6632870d66801f94582202d8'),
+    refno: 1001,
+    name: 'Python program',
+    author: 'Shyam',
+    coauthor: 'Rakesh',
+    pages: 350,
+    price: 450
+  },
+  {
+    _id: ObjectId('663288dd66801f94582202d9'),
+    refno: 1002,
+    name: 'Java program',
+    author: 'Amita',
+    pages: 300,
+    price: 500
+  },
+  {
+    _id: ObjectId('663289ad66801f94582202db'),
+    refno: 1014,
+    name: 'MongoDB',
+    author: 'Shyam',
+    pages: 440,
+    price: 500
+  },
+  {
+    _id: ObjectId('663289ad66801f94582202dc'),
+    refno: 1005,
+    name: 'MySQL',
+    author: 'Shrikant',
+    pages: 330,
+    price: 630,
+    coauthor: 'Nitin'
+  }
+
+//9. Delete the co-author of book 'MySQL'.
+
+library> db.library.update({name:"MySQL"},{$unset:{coauthor:1}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+
+
+
+
+
+
+//Q2 CRICKETER
+
+library> use cricketer
+switched to db cricketer
+cricketer> var data=[{name:"ajay",matches:58,runs:7009,catches:32},
+... {name:"vijay",matches:32,runs:4205,catches:11},
+... {name:"ram",matches:230,runs:6309,catches:105},
+... {name:"ahmed",matches:192,runs:5502,wickets:13,catches:111,stumpings:11},
+... {name:"akshay",matches:101,runs:699,wickets:89,catches:71},
+... {name:"prem",matches:57,runs:1054,wickets:69,catches:55}]
+
+cricketer> db.cricketer.insert(data);
+
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6632a1d3565367c0e72202d8'),
+    '1': ObjectId('6632a1d3565367c0e72202d9'),
+    '2': ObjectId('6632a1d3565367c0e72202da'),
+    '3': ObjectId('6632a1d3565367c0e72202db'),
+    '4': ObjectId('6632a1d3565367c0e72202dc'),
+    '5': ObjectId('6632a1d3565367c0e72202dd')
+  }
+}
+
+
+//1. Find the information of all the bowlers.
+
+cricketer> db.cricketer.find({wickets:{$exists:true}})
+[
+  {
+    _id: ObjectId('6632a1d3565367c0e72202db'),
+    name: 'ahmed',
+    matches: 192,
+    runs: 5502,
+    wickets: 13,
+    catches: 111,
+    stumpings: 11
+  },
+  {
+    _id: ObjectId('6632a1d3565367c0e72202dc'),
+    name: 'akshay',
+    matches: 101,
+    runs: 699,
+    wickets: 89,
+    catches: 71
+  },
+  {
+    _id: ObjectId('6632a1d3565367c0e72202dd'),
+    name: 'prem',
+    matches: 57,
+    runs: 1054,
+    wickets: 69,
+    catches: 55
+  }
+]
+
+//2. Print the information about the wicketkeepers only.
+
+cricketer> db.cricketer.find({stumpings:{$exists:true}})
+[
+  {
+    _id: ObjectId('6632a1d3565367c0e72202db'),
+    name: 'ahmed',
+    matches: 192,
+    runs: 5502,
+    wickets: 13,
+    catches: 111,
+    stumpings: 11
+  {
+  }
+]
+
+//4. Delete the wickets for the player who has stumpings.
+
+cricketer> db.cricketer.update({stumpings:{$exists:true}},{$unset:{wickets:1}})
+{{refno:1002,name:"Java program",author:"Amita",pages:300,price:500}
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+cricketer> db.cricketer.find({stumpings:{$exists:true}})
+[
+  {
+    _id: ObjectId('6632a1d3565367c0e72202db'),
+    name: 'ahmed',
+    matches: 192,
+    runs: 5502,
+    catches: 111,
+    stumpings: 11
+  }
+]
+
+//5. Update the matches and wickets of player 'Ram' to 61 and 71.
+
+cricketer> db.cricketer.update({name:"ram"},{$set:{matches:61,wickets:71}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+
+
+cricketer> db.cricketer.find({name:"ram"})
+[
+  {
+    _id: ObjectId('6632a1d3565367c0e72202da'),
+    name: 'ram',
+    matches: 61,
+    runs: 6309,
+    catches: 105,
+    wickets: 71
+  }
+]
+
+// 6. Print the information of players who have taken more than 100 catches.
+
+cricketer> db.cricketer.find({catches:{$gt:100}})
+[
+  {
+    _id: ObjectId('6632a1d3565367c0e72202da'),
+    name: 'ram',
+    matches: 61,
+    runs: 6309,
+    catches: 105,
+    wickets: 71
+  },
+  {
+    _id: ObjectId('6632a1d3565367c0e72202db'),
+    name: 'ahmed',
+    matches: 192,
+    runs: 5502,
+    catches: 111,
+    stumpings: 11
+  }
+]
+

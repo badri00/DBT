@@ -1,0 +1,173 @@
+
+
+mysql> use College;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select*from student;
++------+--------+-------+-------+------+-------------+
+| roll | name   | class | marks | age  | first_class |
++------+--------+-------+-------+------+-------------+
+|    1 | Anjali | sy    | 60.23 |   22 | NULL        |
+|    2 | Aneli  | fy    | 67.23 |   21 | NULL        |
+|    3 | Aniket | sy    | 67.98 |   20 | NULL        |
+|    4 | Nita   | ty    | 87.67 |   24 | NULL        |
+|    5 | Asmita | 1st   |    50 |    8 | NULL        |
+|    6 | Komal  | fy    | 70.02 |   21 | NULL        |
+|    7 | Sakshi | ty    |  60.9 |   23 | NULL        |
++------+--------+-------+-------+------+-------------+
+7 rows in set (0.00 sec)
+
+
+mysql> alter table student drop column first_class;
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select *from student
+    -> ;
++------+--------+-------+-------+------+
+| roll | name   | class | marks | age  |
++------+--------+-------+-------+------+
+|    1 | Anjali | sy    | 60.23 |   22 |
+|    2 | Aneli  | fy    | 67.23 |   21 |
+|    3 | Aniket | sy    | 67.98 |   20 |
+|    4 | Nita   | ty    | 87.67 |   24 |
+|    5 | Asmita | 1st   |    50 |    8 |
+|    6 | Komal  | fy    | 70.02 |   21 |
+|    7 | Sakshi | ty    |  60.9 |   23 |
++------+--------+-------+-------+------+
+7 rows in set (0.00 sec)
+
+mysql> select roll,name, class, marks,age ,if(marks>75,"First class","NO") as gr
+ade from student ;
++------+--------+-------+-------+------+-------------+
+| roll | name   | class | marks | age  | grade       |
++------+--------+-------+-------+------+-------------+
+|    1 | Anjali | sy    | 60.23 |   22 | NO          |
+|    2 | Aneli  | fy    | 67.23 |   21 | NO          |
+|    3 | Aniket | sy    | 67.98 |   20 | NO          |
+|    4 | Nita   | ty    | 87.67 |   24 | First class |
+|    5 | Asmita | 1st   |    50 |    8 | NO          |
+|    6 | Komal  | fy    | 70.02 |   21 | NO          |
+|    7 | Sakshi | ty    |  60.9 |   23 | NO          |
++------+--------+-------+-------+------+-------------+
+7 rows in set (0.01 sec)
+
+
+mysql> select *,
+    -> case 
+    -> when marks>75 then 'A+ grade'
+    -> when marks>60 then 'A grade'
+    -> when marks>55 then 'B+ grade'
+    -> when marks>50 then 'B grade '
+    -> when marks >40 then 'C grade '
+    -> when marks <40 then 'D grade '
+    -> end 
+    -> as grades from student;
++------+--------+-------+-------+------+----------+
+| roll | name   | class | marks | age  | grades   |
++------+--------+-------+-------+------+----------+
+|    1 | Anjali | sy    | 60.23 |   22 | A grade  |
+|    2 | Aneli  | fy    | 67.23 |   21 | A grade  |
+|    3 | Aniket | sy    | 67.98 |   20 | A grade  |
+|    4 | Nita   | ty    | 87.67 |   24 | A+ grade |
+|    5 | Asmita | 1st   |    50 |    8 | C grade  |
+|    6 | Komal  | fy    | 70.02 |   21 | A grade  |
+|    7 | Sakshi | ty    |  60.9 |   23 | A grade  |
++------+--------+-------+-------+------+----------+
+7 rows in set (0.00 sec)
+
+mysql> delimiter &&
+mysql> create procedure Summation(in start int ,in end int ,out sum int)
+    -> begin
+    -> set sum=0;
+    -> while(start<=end)
+    -> do
+    -> set sum=sum+start;
+    -> set start=start+1;
+    -> end while ;
+    -> select sum;
+    -> end && 
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter ;
+mysql> call Summation(1,10,@sum);
++------+
+| sum  |
++------+
+|   55 |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter &&
+mysql> create procedure Grade(in marks int ,out ans varchar(10))
+    -> begin
+    -> if(marks>75) then 
+    -> set ans= "A+ Grade";
+    -> elseif(marks>60) then 
+    -> set ans= "A Grade";
+    -> elseif(marks>55) then 
+    -> set ans= "B+ Grade";
+    -> elseif(marks>50) then 
+    -> set ans= "B Grade";
+    -> elseif(marks>40) then 
+    -> set ans= "C Grade";
+    -> else
+    -> set ans= "D Grade";
+    -> end if;
+    -> select ans;
+    -> end && 
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call Grade(80,@ans);
++----------+
+| ans      |
++----------+
+| A+ Grade |
++----------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> delimiter &&
+mysql> create procedure EvenOdd(in no int ,out ans varchar(10))
+    -> begin
+    -> if(no%2=0) then 
+    -> set ans ='Even';
+    -> else
+    -> set ans='Odd';
+    -> end if;
+    -> select ans;
+    -> end &&
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> call EvenOdd(16,@ans);
++------+
+| ans  |
++------+
+| Even |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call EvenOdd(119,@ans);
++------+
+| ans  |
++------+
+| Odd  |
++------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call EvenOdd(119,@ans);^C
+mysql> 
+
+
+
