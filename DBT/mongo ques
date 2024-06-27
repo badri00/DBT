@@ -1,0 +1,79 @@
+use sampleDB
+
+ db.createCollection("mycol")
+{ "ok" : 1 }
+
+
+
+
+
+
+db.mycol.insert([
+	{
+		title: "MongoDB Overview",
+		description: "MongoDB is no SQL database",
+		by: "tutorials point",
+		url: "http://www.tutorialspoint.com",
+		tags: ["mongodb", "database", "NoSQL"],
+		likes: 100
+	},
+	{
+		title: "NoSQL Database",
+		description: "NoSQL database doesn't have tables",
+		by: "tutorials point",
+		url: "http://www.tutorialspoint.com",
+		tags: ["mongodb", "database", "NoSQL"],
+		likes: 20,
+		comments: [
+			{
+				user:"user1",
+				message: "My first comment",
+				dateCreated: new Date(2013,11,10,2,35),
+				like: 0
+			}
+		]
+	}
+])
+
+
+
+db.COLLECTION_NAME.find().pretty()
+
+
+Q1.
+db.mycol.updateOne({"comments.user":"user1"},{$set:{"comments.$.url":"www.google.com"}})
+
+Q2.
+db.mycol.find({likes:{$gt:20}}).pretty()
+
+
+
+
+
+
+
+
+
+
+************************************************************************
+
+{
+	_id: ,
+	Emp_ID: "10025AE336"
+	Personal_details:{
+		First_Name: "Radhika",
+		Last_Name: "Sharma",
+		Date_Of_Birth: "1995-09-26"
+	},
+	Contact: {
+		e-mail: "radhika_sharma.123@gmail.com",
+		phone: "9848022338"
+	},
+	Address: {
+		city: "Hyderabad",
+		Area: "Madapur",
+		State: "Telangana"
+	}
+}
+
+
